@@ -14,7 +14,6 @@ function AuthenticatedBodyProfile(props: Props) {
   const { userId, JWToken, setAuthenticatedUser } = props;
 
   const [form] = Form.useForm();
-
   const { data: user } = useGetUserById(userId!);
   const [isNameDisabled, setIsNameDisabled] = useState(true);
   const [isSurameDisabled, setIsSurameDisabled] = useState(true);
@@ -27,7 +26,7 @@ function AuthenticatedBodyProfile(props: Props) {
       const userInfo: UpdateUser = {
         address: values.address,
         phoneNumber: values.phone,
-        type: "Client",
+        type: "Restaurant Owner",
         username: {
           name: values.name,
           surname: values.surname,

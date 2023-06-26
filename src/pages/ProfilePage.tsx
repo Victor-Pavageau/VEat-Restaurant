@@ -20,8 +20,6 @@ function ProfilePage() {
     }
   }, [JWToken]);
 
-  useEffect(() => {}, [isAuthenticated]);
-
   useEffect(() => {
     if (getUserIdFromJWT()) {
       setUserId(getUserIdFromJWT());
