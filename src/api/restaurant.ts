@@ -52,10 +52,10 @@ export type Restaurant = {
   ];
 };
 
-type GetAllRestaurantsResponse = {
+type GetRestaurantsByOwnerResponse = {
   state: string;
   message: string;
-  restaurants: Restaurant[];
+  restaurant: Restaurant;
 };
 
 type GetRestaurantByIdResponse = {
@@ -76,16 +76,16 @@ type GetMenuByIdResponse = {
   menu: Menu;
 };
 
-export const fetchRestaurantByOwner = async (ownerId: string): Promise<Restaurant[]> => {
+export const fetchRestaurantByOwner = async (ownerId: string): Promise<Restaurant> => {
   return await axios
-    .request<GetAllRestaurantsResponse>({
+    .request<GetRestaurantsByOwnerResponse>({
       method: "GET",
       url: `${baseUrl}/restaurants/owner/${ownerId}`,
       headers: {
         Authorization: getJWT(),
       },
     })
-    .then((result) => result.data.restaurants);
+    .then((result) => result.data.restaurant);
 };
 
 export const fetchRestaurantById = async (
