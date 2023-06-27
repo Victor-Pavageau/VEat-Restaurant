@@ -3,10 +3,15 @@ import { tp } from "../routing";
 import { useNavigate } from "react-router-dom";
 import { getUserIdFromJWT } from "../api/common";
 import NavBar from "../components/NavBar";
+import { useGetUserById } from "../hooks/useGetUserById";
+import { useGetRestaurantsByOwnerId } from "../hooks/useGetRestaurantsByOwnerId";
+import { nanoid } from "nanoid";
 
 function HomePage() {
   const [userId] = useState<string | undefined>(getUserIdFromJWT());
   const navigate = useNavigate();
+  const { data: user } = useGetUserById(userId!);
+  const { data: restaurantList } = useGetRestaurantsByOwnerId(userId!);
 
   useEffect(() => {
     if (userId === undefined) {
@@ -17,8 +22,21 @@ function HomePage() {
 
   return (
     <>
-      <NavBar />
-      <div>Restaurant Page</div>
+      {user && (
+        <>
+          <NavBar />
+          <div>Restaurant Page</div>
+          <div>
+            {restaurantList && (
+              <>
+                {restaurantList.map((restaurant) => {
+                  return <div key={nanoid()}>{restaurant.restaurantName}</div>;
+                })}
+              </>
+            )}
+          </div>
+        </>
+      )}
     </>
   );
 }
