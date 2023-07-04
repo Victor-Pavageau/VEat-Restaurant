@@ -14,15 +14,11 @@ export type userType =
 export type User = {
   uid: string;
   type: userType;
-  username: {
-    name: string;
-    surname: string;
-  };
-  address: {
-    longitude?: string;
-    latitude?: string;
-    fullAddress: string;
-  };
+  name: string;
+  surname: string;
+  longitude?: string;
+  latitude?: string;
+  fullAddress: string;
   phoneNumber: string;
   email: string;
   note?: number;
@@ -32,24 +28,21 @@ export type User = {
 
 export type CreateUser = {
   type: userType;
-  username: {
-    name: string;
-    surname: string;
-  };
+  name: string;
+  surname: string;
   password: string;
-  address: string;
+  fullAddress: string;
   phoneNumber: string;
   email: string;
 };
 
 export type UpdateUser = {
   type: userType;
-  username: {
-    name: string;
-    surname: string;
-  };
-  address: string;
+  name: string;
+  surname: string;
+  fullAddress: string;
   phoneNumber: string;
+  password?: string;
 };
 
 export type Coordinates = {

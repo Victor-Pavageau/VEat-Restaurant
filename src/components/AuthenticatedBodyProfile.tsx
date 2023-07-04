@@ -23,23 +23,33 @@ function AuthenticatedBodyProfile(props: Props) {
 
   const onFinish = async (values: any) => {
     if (userId) {
-      const userInfo: UpdateUser = {
-        address: values.address,
-        phoneNumber: values.phone,
-        type: "Restaurant Owner",
-        username: {
+      if (values.password) {
+        const userInfo: UpdateUser = {
+          fullAddress: values.address,
+          phoneNumber: values.phone,
+          type: "Restaurant Owner",
           name: values.name,
           surname: values.surname,
-        },
-      };
-      await updateUser(userId, userInfo);
+          password: values.password,
+        };
+        await updateUser(userId, userInfo);
+      } else {
+        const userInfo: UpdateUser = {
+          fullAddress: values.address,
+          phoneNumber: values.phone,
+          type: "Restaurant Owner",
+          name: values.name,
+          surname: values.surname,
+        };
+        await updateUser(userId, userInfo);
+      }
     }
   };
 
   useEffect(() => {
-    form.setFieldValue("name", user?.username.name);
-    form.setFieldValue("surname", user?.username.surname);
-    form.setFieldValue("address", user?.address.fullAddress);
+    form.setFieldValue("name", user?.name);
+    form.setFieldValue("surname", user?.surname);
+    form.setFieldValue("address", user?.fullAddress);
     form.setFieldValue("phone", user?.phoneNumber);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
@@ -52,11 +62,7 @@ function AuthenticatedBodyProfile(props: Props) {
             <div className="flex gap-3">
               <div className="flex flex-col gap-1">
                 Name
-                <Form.Item
-                  required
-                  name={"name"}
-                  initialValue={user.username.name}
-                >
+                <Form.Item required name={"name"} initialValue={user.name}>
                   <Input
                     required
                     className="bg-[--light-gray] hover:bg-[--light-gray] focus:bg-[--light-gray]"
@@ -81,7 +87,7 @@ function AuthenticatedBodyProfile(props: Props) {
                 <Form.Item
                   required
                   name={"surname"}
-                  initialValue={user.username.surname}
+                  initialValue={user.surname}
                 >
                   <Input
                     required
@@ -110,7 +116,7 @@ function AuthenticatedBodyProfile(props: Props) {
               <Form.Item
                 required
                 name={"address"}
-                initialValue={user.address.fullAddress}
+                initialValue={user.fullAddress}
               >
                 <Input
                   required
@@ -163,7 +169,7 @@ function AuthenticatedBodyProfile(props: Props) {
           <div className="flex flex-col px-12 pt-1 text-[--gray] gap-y-2">
             <div className="flex flex-col gap-1">
               Password
-              <Form.Item required name={"email"}>
+              <Form.Item required name={"password"}>
                 <Input
                   required
                   className="bg-[--light-gray] hover:bg-[--light-gray] focus:bg-[--light-gray]"

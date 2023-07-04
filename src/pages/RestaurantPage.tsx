@@ -28,7 +28,12 @@ function HomePage() {
   }, []);
 
   const shortAddress = (fullAddress: string) => {
-    return fullAddress.split(",")[0];
+    if (fullAddress) {
+      if (fullAddress.includes(",")) {
+        return fullAddress.split(",")[0];
+      }
+    }
+    return fullAddress;
   };
 
   return (
@@ -42,12 +47,15 @@ function HomePage() {
             onCancel={() => setModalIsOpen(false)}
             footer={null}
           >
-            <EditOrCreateRestaurantModal restaurant={restaurant} />
+            <EditOrCreateRestaurantModal
+              restaurant={restaurant}
+              userId={user.uid}
+            />
           </Modal>
           <div className="overflow-auto h-screen">
             <div className="flex justify-center items-center mt-10">
               <div className="text-xl text-[--orange] font-bold">
-                {user.username.name} {user.username.surname}
+                {user.name} {user.surname}
               </div>
             </div>
             <div>
