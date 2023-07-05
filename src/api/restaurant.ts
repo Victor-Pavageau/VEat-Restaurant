@@ -14,6 +14,14 @@ export type Article = {
   tags: Tag[];
 };
 
+export type SendArticle = {
+  name: string;
+  photo: string;
+  description: string;
+  price: number;
+  tags: Tag[];
+};
+
 export type Menu = {
   uid: string;
   isUnavailable: boolean;
@@ -23,7 +31,17 @@ export type Menu = {
   price: number;
   articles: {
     articleId: string;
-    quantity: number;
+  }[];
+};
+
+export type SendMenu = {
+  isUnavailable?: boolean;
+  name: string;
+  photo: string;
+  description: string;
+  price: number;
+  articles: {
+    articleId: string;
   }[];
 };
 
@@ -39,23 +57,38 @@ export type Restaurant = {
   logo: string;
   menus?: Menu[];
   articles?: Article[];
-  schedule: [
-    {
-      day: string;
-      timeSpan: [
-        {
-          openTime: string;
-          closureTime: string;
-        }
-      ];
-    }
-  ];
+  schedule: {
+    day: string;
+    timeSpan: {
+      openTime: string;
+      closureTime: string;
+    }[]
+  }[]
 };
 
-type GetAllRestaurantsResponse = {
+export type SendRestaurant = {
+  ownerId: string;
+  restaurantName: string;
+  address: string;
+  tags?: string[];
+  logo: string;
+  menus?: SendMenu[];
+  articles?: SendArticle[];
+  schedule: {
+    day: string;
+    timeSpan: [
+      {
+        openTime: string;
+        closureTime: string;
+      }
+    ];
+  }[]
+};
+
+type GetRestaurantsByOwnerResponse = {
   state: string;
   message: string;
-  restaurants: Restaurant[];
+  restaurant: Restaurant;
 };
 
 type GetRestaurantByIdResponse = {
@@ -70,22 +103,56 @@ type GetArticleByIdResponse = {
   article: Article;
 };
 
+type GetArticleByMenuIdResponse = {
+  state: string;
+  message: string;
+  articles: Article[];
+};
+
 type GetMenuByIdResponse = {
   state: string;
   message: string;
   menu: Menu;
 };
 
-export const fetchRestaurantByOwner = async (ownerId: string): Promise<Restaurant[]> => {
+export const fetchRestaurantByOwner = async (ownerId: string): Promise<Restaurant> => {
   return await axios
-    .request<GetAllRestaurantsResponse>({
+    .request<GetRestaurantsByOwnerResponse>({
       method: "GET",
       url: `${baseUrl}/restaurants/owner/${ownerId}`,
       headers: {
         Authorization: getJWT(),
       },
     })
-    .then((result) => result.data.restaurants);
+    .then((result) => result.data.restaurant);
+};
+
+export const createRestaurant = async (restaurant: SendRestaurant) => {
+  return await axios
+    .request({
+      method: "POST",
+      url: `${baseUrl}/restaurants`,
+      headers: {
+        Authorization: getJWT(),
+      },
+      data:
+        restaurant
+    })
+    .then((result) => result.data.restaurant);
+};
+
+export const updateRestaurant = async (restaurant: SendRestaurant, restaurantId: string) => {
+  return await axios
+    .request({
+      method: "PUT",
+      url: `${baseUrl}/restaurants/${restaurantId}`,
+      headers: {
+        Authorization: getJWT(),
+      },
+      data:
+        restaurant
+    })
+    .then((result) => result.data.restaurant);
 };
 
 export const fetchRestaurantById = async (
@@ -114,6 +181,20 @@ export const fetchArticleById = async (
       },
     })
     .then((result) => result.data.article);
+};
+
+export const fetchArticleInMenu = async (
+  menuId: string
+): Promise<Article[]> => {
+  return await axios
+    .request<GetArticleByMenuIdResponse>({
+      method: "GET",
+      url: `${baseUrl}/restaurants/menu/${menuId}/article`,
+      headers: {
+        Authorization: getJWT(),
+      },
+    })
+    .then((result) => result.data.articles);
 };
 
 export const fetchMenuById = async (

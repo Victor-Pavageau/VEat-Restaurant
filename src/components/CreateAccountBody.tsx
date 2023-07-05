@@ -8,14 +8,12 @@ function CreateAccountBody() {
 
   const onFinish = async (values: any) => {
     const newUser: CreateUser = {
-      address: values.address,
+      fullAddress: values.address,
       email: values.email,
       password: values.password,
       phoneNumber: values.phone,
-      username: {
-        name: values.name,
-        surname: values.surname,
-      },
+      name: values.name,
+      surname: values.surname,
       type: "Restaurant Owner",
     };
     await createUser(newUser);

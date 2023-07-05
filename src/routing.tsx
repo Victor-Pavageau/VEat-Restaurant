@@ -6,6 +6,9 @@ import ProfilePage from "./pages/ProfilePage";
 import CreateAccount from "./pages/CreateAccount";
 import StatsPage from "./pages/StatsPage";
 import NotFoundPage from "./pages/NotFoundPage";
+import { io } from "socket.io-client";
+import { getUserIdFromJWT } from "./api/common";
+import { useEffect } from "react";
 export type Path =
   | "/"
   | "/order/:orderId"
@@ -37,7 +40,24 @@ const replacePlaceholders = (url: Path, replaceArray: string[]): string => {
   return result;
 };
 
+const socket = io("localhost", {
+  path: "/socket.io/",
+  query: {
+    clientId: getUserIdFromJWT(),
+  },
+});
+
 function RouteHandler(): JSX.Element {
+  useEffect(() => {
+    socket.on("message", (message) => {
+      console.log("Received server message:", message);
+    });
+
+    return () => {
+      socket.off("message");
+    };
+  }, []);
+
   return (
     <Routes>
       <Route path={tp("/")} element={<RestaurantPage />} />

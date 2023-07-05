@@ -17,7 +17,7 @@ function NavBar() {
   };
 
   return (
-    <div className="absolute bg-black bottom-10 left-7 right-7 rounded-2xl h-14 text-white flex justify-around items-center">
+    <div className="absolute bg-black bottom-10 left-7 right-7 rounded-2xl h-14 text-white flex justify-around items-center z-50">
       <BsHouse
         className={`bg-transparent ${
           isActivePage("/") ? "text-[--yellow]" : "text-white"
